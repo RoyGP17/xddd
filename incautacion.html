@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Incautación</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .option-label.active {
+            /* Equivalente a: ring-2 ring-blue-600 bg-blue-100 */
+            box-shadow: 0 0 0 2px #2563eb;
+            background-color: #dbeafe;
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen p-4">
+    <audio id="step-sound" src="https://www.dropbox.com/scl/fi/hxjbew1svjw0uizngijkc/Incautacion.mp3?rlkey=w13sbp3p4nqw0zpul58wqqxa9&st=fsdeg73t&raw=1" preload="auto"></audio>
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-2xl w-full">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Análisis de Aplicación de Incautación</h1>
+
+        <!-- Step Indicator -->
+        <div class="mb-8 flex justify-center items-center">
+            <div id="step-indicator" class="text-xl font-medium text-blue-600">Paso 1 de 6</div>
+        </div>
+
+        <!-- Steps Container -->
+        <div id="steps-container">
+            <!-- Step 1: Identificación del bien -->
+            <div id="step-1" class="step-content active">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">1. Identificación del bien</h2>
+                <p class="text-lg text-gray-600 mb-6">¿Qué tipo de bien se busca incautar?</p>
+                <div class="space-y-4">
+                    <div>
+                        <input type="radio" id="bien-objeto" name="tipo_bien" value="Objeto" class="hidden">
+                        <label for="bien-objeto" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            Objeto
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="bien-documento" name="tipo_bien" value="Documento" class="hidden">
+                        <label for="bien-documento" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            Documento
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="bien-dinero" name="tipo_bien" value="Dinero" class="hidden">
+                        <label for="bien-dinero" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            Dinero
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="bien-vehiculo" name="tipo_bien" value="Vehículo" class="hidden">
+                        <label for="bien-vehiculo" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            Vehículo
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="bien-arma" name="tipo_bien" value="Arma" class="hidden">
+                        <label for="bien-arma" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            Arma
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="bien-otro" name="tipo_bien" value="Otro" class="hidden">
+                        <label for="bien-otro" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            Otro (especifique)
+                        </label>
+                    </div>
+                    <input type="text" id="otro_tipo_bien_text" placeholder="Especifique el tipo de bien"
+                        class="hidden mt-2 p-3 w-full border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+            </div>
+
+            <!-- Step 2: Relación del bien con el delito -->
+            <div id="step-2" class="step-content">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">2. Relación del bien con el delito</h2>
+                <p class="text-lg text-gray-600 mb-6">¿Es alguno de los siguientes?</p>
+                <div class="space-y-4">
+                    <div>
+                        <input type="radio" id="relacion-efecto" name="relacion_delito" value="Efecto del delito"
+                            class="hidden">
+                        <label for="relacion-efecto" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            a) Efecto del delito (producto o ganancia)
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="relacion-instrumento" name="relacion_delito"
+                            value="Instrumento del delito" class="hidden">
+                        <label for="relacion-instrumento" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            b) Instrumento del delito (medio para cometerlo)
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="relacion-objeto" name="relacion_delito" value="Objeto del delito"
+                            class="hidden">
+                        <label for="relacion-objeto" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            c) Objeto del delito (sobre el que recae la acción)
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="relacion-conviccion" name="relacion_delito" value="Pieza de convicción"
+                            class="hidden">
+                        <label for="relacion-conviccion" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            d) Pieza de convicción (valor probatorio)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Verificación de la autorización judicial -->
+            <div id="step-3" class="step-content">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">3. Verificación de la autorización judicial</h2>
+                <p class="text-lg text-gray-600 mb-6">¿Existe autorización del juez de investigación preparatoria?</p>
+                <div class="space-y-4">
+                    <div>
+                        <input type="radio" id="autorizacion-si" name="autorizacion_judicial" value="si" class="hidden">
+                        <label for="autorizacion-si" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ✅ Sí
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="autorizacion-no" name="autorizacion_judicial" value="no" class="hidden">
+                        <label for="autorizacion-no" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ❌ No
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Evaluación de excepciones a la autorización judicial -->
+            <div id="step-4" class="step-content">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">4. Evaluación de excepciones a la autorización
+                    judicial</h2>
+                <p class="text-lg text-gray-600 mb-6">¿Se presenta alguna de estas tres situaciones?</p>
+                <div class="space-y-4">
+                    <div>
+                        <input type="checkbox" id="excepcion-periculum" name="excepciones_judiciales"
+                            value="Peligro en la demora" class="hidden">
+                        <label for="excepcion-periculum" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            a) Peligro en la demora (periculum in mora)
+                        </label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="excepcion-infructuosidad" name="excepciones_judiciales"
+                            value="Peligro de infructuosidad" class="hidden">
+                        <label for="excepcion-infructuosidad" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            b) Peligro de infructuosidad
+                        </label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="excepcion-flagrancia" name="excepciones_judiciales"
+                            value="Flagrancia delictiva" class="hidden">
+                        <label for="excepcion-flagrancia" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            c) Flagrancia delictiva o peligro inminente (arts. 218° CPP y 17° Ley N.º 30077)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Revisión de los requisitos formales -->
+            <div id="step-5" class="step-content">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">5. Revisión de los requisitos formales</h2>
+                <p class="text-lg text-gray-600 mb-6">Por favor, marque las que apliquen:</p>
+                <div class="space-y-4">
+                    <div>
+                        <input type="checkbox" id="formal-policia-fiscalia" name="requisitos_formales"
+                            value="Realizada por Policía o Fiscalía" class="hidden">
+                        <label for="formal-policia-fiscalia" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ¿La incautación fue realizada por Policía o Fiscalía?
+                        </label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="formal-acta" name="requisitos_formales" value="Levantamiento de acta"
+                            class="hidden">
+                        <label for="formal-acta" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ¿Se levantó acta?
+                        </label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="formal-notificacion" name="requisitos_formales"
+                            value="Notificación al fiscal o juez" class="hidden">
+                        <label for="formal-notificacion" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ¿Se notificó al fiscal o juez?
+                        </label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="formal-cadena-custodia" name="requisitos_formales"
+                            value="Aplicación de cadena de custodia" class="hidden">
+                        <label for="formal-cadena-custodia" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ¿Se aplicó cadena de custodia?
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Análisis del derecho de propiedad -->
+            <div id="step-6" class="step-content">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">6. Análisis del derecho de propiedad</h2>
+                <p class="text-lg text-gray-600 mb-6">¿El bien pertenece a un tercero ajeno al delito?</p>
+                <div class="space-y-4">
+                    <div>
+                        <input type="radio" id="tercero-si" name="pertenece_tercero" value="si" class="hidden">
+                        <label for="tercero-si" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            Sí
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" id="tercero-no" name="pertenece_tercero" value="no" class="hidden">
+                        <label for="tercero-no" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-full border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-full bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            No
+                        </label>
+                    </div>
+                </div>
+                <p class="text-lg text-gray-600 my-6">Marque las que apliquen:</p>
+                <div class="space-y-4">
+                    <div>
+                        <input type="checkbox" id="propiedad-funcion-probatoria" name="propiedad_preguntas"
+                            value="Ha cumplido su función probatoria" class="hidden">
+                        <label for="propiedad-funcion-probatoria" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ¿Ha cumplido su función probatoria?
+                        </label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="propiedad-devolucion" name="propiedad_preguntas"
+                            value="Es posible su devolución o entrega provisional" class="hidden">
+                        <label for="propiedad-devolucion" class="option-label">
+                            <span
+                                class="w-5 h-5 border rounded-md border-gray-400 mr-3 flex-shrink-0 flex items-center justify-center">
+                                <span
+                                    class="w-3 h-3 rounded-sm bg-blue-600 opacity-0 scale-0 transition-all duration-200 transform-gpu group-has-checked:opacity-100 group-has-checked:scale-100"></span>
+                            </span>
+                            ¿Es posible su devolución o entrega provisional?
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conclusion Step -->
+            <div id="step-conclusion" class="step-content">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">Conclusión Final</h2>
+                <div id="final-result"
+                    class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-xl shadow-inner text-lg">
+                    <!-- The conclusion will be displayed here -->
+                </div>
+                <div class="mt-8">
+                    <p class="text-lg text-gray-600 mb-4">Resumen de tus respuestas:</p>
+                    <ul id="answers-summary" class="list-disc list-inside text-gray-700 space-y-2">
+                        <!-- Summary of answers will be displayed here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-8 flex justify-between">
+            <button id="prev-btn" class="btn btn-secondary flex items-center" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                        clip-rule="evenodd" />
+                </svg>
+                Anterior
+            </button>
+            <button id="next-btn" class="btn btn-primary flex items-center ml-auto">
+                Siguiente
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+            <button id="reset-btn" class="btn btn-danger flex items-center ml-auto" style="display: none;">
+                Reiniciar
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M4 2a1 1 0 011 1v2.102a2.247 2.247 0 01.378-.008L7.848 7.37a2.246 2.246 0 010 3.208L5.378 13.9a2.247 2.247 0 01-.378-.008V16a1 1 0 11-2 0v-2.102a2.247 2.247 0 01-.378-.008L.152 12.63a2.246 2.246 0 010-3.208L2.622 6.1a2.247 2.247 0 01.378-.008V4a1 1 0 011-1zM10 5a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1zm0 4a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1zm0 4a1 1 0 011-1h6a1 1 0 110 2h-6a1 1 0 01-1-1z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+
+        // State variables for the application
+        let currentStep = 1;
+        const totalSteps = 6; // Excluding the conclusion step for count
+        const answers = {
+            tipo_bien: '',
+            relacion_delito: '',
+            autorizacion_judicial: '',
+            excepciones_judiciales: [],
+            requisitos_formales: [],
+            pertenece_tercero: '',
+            propiedad_preguntas: []
+        };
+
+        // DOM elements
+        const stepsContainer = document.getElementById('steps-container');
+        const stepIndicator = document.getElementById('step-indicator');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const finalResultDiv = document.getElementById('final-result');
+        const answersSummaryUl = document.getElementById('answers-summary');
+        const otroTipoBienText = document.getElementById('otro_tipo_bien_text');
+
+        // Event listener for "Otro" option in Step 1
+        document.querySelectorAll('input[name="tipo_bien"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                if (event.target.value === 'Otro') {
+                    otroTipoBienText.classList.remove('hidden');
+                } else {
+                    otroTipoBienText.classList.add('hidden');
+                }
+            });
+        });
+
+        /**
+         * Displays the specified step and updates navigation buttons.
+         * @param {number|string} stepId - The ID of the step to display (e.g., 1, 2, 'conclusion').
+         */
+        function showStep(stepId) {
+            document.getElementById('step-sound').play();
+            // Hide all step content
+            document.querySelectorAll('.step-content').forEach(step => {
+                step.classList.remove('active');
+            });
+
+            // Show the target step
+            const targetStep = document.getElementById(typeof stepId === 'number' ? `step-${stepId}` : stepId);
+            if (targetStep) {
+                targetStep.classList.add('active');
+            }
+
+            // Update step indicator
+            if (typeof stepId === 'number') {
+                stepIndicator.textContent = `Paso ${stepId} de ${totalSteps}`;
+                prevBtn.style.display = (stepId === 1) ? 'none' : 'flex';
+                nextBtn.style.display = 'flex';
+                resetBtn.style.display = 'none';
+            } else if (stepId === 'step-conclusion') {
+                stepIndicator.textContent = 'Conclusión';
+                prevBtn.style.display = 'none'; // No "previous" from conclusion
+                nextBtn.style.display = 'none';
+                resetBtn.style.display = 'flex';
+                generateConclusion();
+                generateAnswersSummary();
+            }
+        }
+
+        /**
+         * Moves to the next step, handling conditional logic for steps 3 and 4.
+         */
+        function nextStep() {
+            // Save current step's answers before moving
+            saveAnswers(currentStep);
+
+            // Conditional logic for navigation
+            if (currentStep === 3) {
+                if (answers.autorizacion_judicial === 'si') {
+                    // If 'Sí' for judicial authorization, skip to Step 5
+                    currentStep = 5;
+                } else {
+                    // If 'No', proceed to Step 4
+                    currentStep++;
+                }
+            } else {
+                currentStep++;
+            }
+
+            // If we are past the last question step, go to conclusion
+            if (currentStep > totalSteps) {
+                showStep('step-conclusion');
+            } else {
+                showStep(currentStep);
+            }
+        }
+
+        /**
+         * Moves to the previous step, handling conditional logic for steps 3 and 4.
+         */
+        function prevStep() {
+            // Conditional logic for navigation
+            if (currentStep === 5 && answers.autorizacion_judicial === 'si') {
+                // If we skipped step 4 from step 3, go back to step 3
+                currentStep = 3;
+            } else {
+                currentStep--;
+            }
+
+            if (currentStep < 1) {
+                currentStep = 1; // Prevent going below step 1
+            }
+            showStep(currentStep);
+        }
+
+        /**
+         * Saves the answers from the current step to the 'answers' object.
+         * @param {number} stepNum - The number of the step whose answers are to be saved.
+         */
+        function saveAnswers(stepNum) {
+            switch (stepNum) {
+                case 1:
+                    const selectedTipoBien = document.querySelector('input[name="tipo_bien"]:checked');
+                    if (selectedTipoBien) {
+                        answers.tipo_bien = selectedTipoBien.value === 'Otro' ? otroTipoBienText.value : selectedTipoBien.value;
+                    }
+                    break;
+                case 2:
+                    const selectedRelacionDelito = document.querySelector('input[name="relacion_delito"]:checked');
+                    if (selectedRelacionDelito) {
+                        answers.relacion_delito = selectedRelacionDelito.value;
+                    }
+                    break;
+                case 3:
+                    const selectedAutorizacion = document.querySelector('input[name="autorizacion_judicial"]:checked');
+                    if (selectedAutorizacion) {
+                        answers.autorizacion_judicial = selectedAutorizacion.value;
+                    }
+                    break;
+                case 4:
+                    answers.excepciones_judiciales = Array.from(document.querySelectorAll('input[name="excepciones_judiciales"]:checked'))
+                        .map(cb => cb.value);
+                    break;
+                case 5:
+                    answers.requisitos_formales = Array.from(document.querySelectorAll('input[name="requisitos_formales"]:checked'))
+                        .map(cb => cb.value);
+                    break;
+                case 6:
+                    const selectedPerteneceTercero = document.querySelector('input[name="pertenece_tercero"]:checked');
+                    if (selectedPerteneceTercero) {
+                        answers.pertenece_tercero = selectedPerteneceTercero.value;
+                    }
+                    answers.propiedad_preguntas = Array.from(document.querySelectorAll('input[name="propiedad_preguntas"]:checked'))
+                        .map(cb => cb.value);
+                    break;
+            }
+            console.log('Current Answers:', answers); // For debugging
+        }
+
+        /**
+         * Generates and displays the final conclusion based on collected answers.
+         */
+        function generateConclusion() {
+            let conclusion = "";
+            let canApplyIncautacion = true;
+            let reasons = [];
+
+            // Condition 1: Relationship with the crime
+            if (!answers.relacion_delito) {
+                canApplyIncautacion = false;
+                reasons.push("Falta la relación del bien con el delito.");
+            }
+
+            // Condition 2: Judicial Authorization and Exceptions
+            if (answers.autorizacion_judicial === 'no') {
+                if (answers.excepciones_judiciales.length === 0) {
+                    canApplyIncautacion = false;
+                    reasons.push("No hay autorización judicial ni se configuran excepciones.");
+                }
+            }
+
+            // Condition 3: Formal Requirements (Assuming all should be met for a strong case)
+            // This is a simplification; a real legal app might have nuanced rules
+            if (answers.requisitos_formales.length < 4 && currentStep > 4) { // Only check if reached step 5
+                // This is a softer check, as some might be missing but still allow
+                // For a strict "✅ CONCLUSIÓN FINAL" they should ideally be present.
+                // Let's make this a warning rather than a strict blocker for simplicity.
+                // canApplyIncautacion = false; // Could be a blocker if strict
+                // reasons.push("No se cumplen todos los requisitos formales.");
+            }
+
+            // Condition 4: Property Rights (Third party, probative function, return)
+            if (answers.pertenece_tercero === 'si' && currentStep > 6) { // Only check if reached step 6
+                if (!answers.propiedad_preguntas.includes("Ha cumplido su función probatoria") &&
+                    !answers.propiedad_preguntas.includes("Es posible su devolución o entrega provisional")) {
+                    // If it belongs to a third party and hasn't fulfilled probative function and cannot be returned
+                    canApplyIncautacion = false;
+                    reasons.push("El bien pertenece a un tercero y no ha cumplido su función probatoria ni es posible su devolución/entrega provisional.");
+                }
+            }
+
+
+            if (canApplyIncautacion && answers.relacion_delito) { // Ensure basic relationship is established
+                conclusion = `✅ CONCLUSIÓN FINAL: Si el bien está vinculado con el delito y se cumplen los requisitos legales, procesales y de urgencia (en caso de no haber orden judicial), entonces ES POSIBLE APLICAR LA MEDIDA DE INCAUTACIÓN.`;
+                finalResultDiv.classList.remove('bg-red-50', 'border-red-500', 'text-red-800');
+                finalResultDiv.classList.add('bg-blue-50', 'border-blue-500', 'text-blue-800');
+            } else {
+                conclusion = `❌ NO ES POSIBLE APLICAR LA MEDIDA DE INCAUTACIÓN en este caso.`;
+                if (reasons.length > 0) {
+                    conclusion += ` Razones: ${reasons.join(' ')}`;
+                } else {
+                    conclusion += ` Razones: Faltan datos clave o las condiciones no se cumplen.`;
+                }
+                finalResultDiv.classList.remove('bg-blue-50', 'border-blue-500', 'text-blue-800');
+                finalResultDiv.classList.add('bg-red-50', 'border-red-500', 'text-red-800');
+            }
+
+            finalResultDiv.textContent = conclusion;
+        }
+
+        /**
+         * Generates a summary of all collected answers.
+         */
+        function generateAnswersSummary() {
+            answersSummaryUl.innerHTML = ''; // Clear previous summary
+
+            const appendAnswer = (label, value) => {
+                if (value) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="font-semibold">${label}:</span> ${Array.isArray(value) ? value.join(', ') : value}`;
+                    answersSummaryUl.appendChild(li);
+                }
+            };
+
+            appendAnswer('Tipo de bien', answers.tipo_bien);
+            appendAnswer('Relación con el delito', answers.relacion_delito);
+            appendAnswer('Autorización judicial', answers.autorizacion_judicial === 'si' ? 'Sí' : (answers.autorizacion_judicial === 'no' ? 'No' : ''));
+            if (answers.autorizacion_judicial === 'no') {
+                appendAnswer('Excepciones a la autorización judicial', answers.excepciones_judiciales.length > 0 ? answers.excepciones_judiciales : 'Ninguna');
+            }
+            appendAnswer('Requisitos formales cumplidos', answers.requisitos_formales.length > 0 ? answers.requisitos_formales : 'Ninguno');
+            appendAnswer('Pertenece a un tercero', answers.pertenece_tercero === 'si' ? 'Sí' : (answers.pertenece_tercero === 'no' ? 'No' : ''));
+            if (answers.pertenece_tercero === 'si') {
+                appendAnswer('Preguntas sobre propiedad', answers.propiedad_preguntas.length > 0 ? answers.propiedad_preguntas : 'Ninguna');
+            }
+        }
+
+        // Event Listeners for navigation buttons
+        nextBtn.addEventListener('click', nextStep);
+        prevBtn.addEventListener('click', prevStep);
+        resetBtn.addEventListener('click', () => {
+            // Reset all answers
+            Object.keys(answers).forEach(key => {
+                if (Array.isArray(answers[key])) {
+                    answers[key] = [];
+                } else {
+                    answers[key] = '';
+                }
+            });
+
+            // Clear radio/checkbox selections
+            document.querySelectorAll('input[type="radio"]:checked').forEach(radio => radio.checked = false);
+            document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => checkbox.checked = false);
+            otroTipoBienText.value = '';
+            otroTipoBienText.classList.add('hidden'); // Hide the text input
+
+            currentStep = 1;
+            showStep(currentStep);
+        });
+
+        // Initial display
+        // Función para marcar visualmente la opción seleccionada
+        function actualizarEstilosSeleccionados() {
+            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+                const name = input.name;
+                const inputsMismoGrupo = document.querySelectorAll(`input[name="${name}"]`);
+
+                inputsMismoGrupo.forEach(i => {
+                    const label = document.querySelector(`label[for="${i.id}"]`);
+                    if (!label) return;
+
+                    if (i.checked) {
+                        label.classList.add("active");
+                    } else {
+                        label.classList.remove("active");
+                    }
+                });
+            });
+        }
+
+        // Activar estilos y sonido cada vez que se selecciona una opción
+        document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', () => {
+                actualizarEstilosSeleccionados();
+                document.getElementById('step-sound').play();
+            });
+        });
+
+
+        showStep(currentStep);
+        function activateSelectedOption(groupName) {
+            document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => {
+                const label = document.querySelector(`label[for="${input.id}"]`);
+                if (input.checked) {
+                    label.classList.add("active");
+                } else {
+                    label.classList.remove("active");
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>
